@@ -15,7 +15,6 @@
                     <form  id="formdata-p" class="needs-validation" novalidate action="{{ route('admin.post.update', $data) }}"
                         method="POST" enctype="multipart/form-data">
 
-                        @method('PUT')
                         @csrf
                         <input type="hidden" name="edit_id" value="{{ $data->id }}">
                         <div class="card-body">
@@ -138,7 +137,6 @@
 
 
     $(document).ready(function() {
-        var pram = '{{$data->id}}';
 
         $('body').on('click','#submit-p',function(e){
 
@@ -146,10 +144,10 @@
             $.ajax({
                 data: $('#formdata-p').serialize(),
 
-                url: "/post/update/" + pram,
+                url: "{{ route('admin.post.store') }}",
 
-                method: 'POST',
-                processData: false,
+                type:'POST',
+                enctype: 'multipart/form-data',
                 success: function(data) {
                     if( data['status_code'] == 200) {
                         window.location.href = '/admin/post';

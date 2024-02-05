@@ -23,32 +23,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
 
     //company routes
-    Route::get('company', [PostsController::class, 'index'])->name('company.index');
-    Route::get('company/create', [PostsController::class, 'create'])->name('company.create');
-    Route::get('getCompanyData', [PostsController::class, 'getCompanyData'])->name('company.getCompanyData');
-    Route::post('company/store', [PostsController::class, 'store'])->name('company.store');
-    // Route::get('company/{company}/show',[PostsController::class, 'show'])->name('company.show');
-    Route::get('company/{company}/edit', [PostsController::class, 'edit'])->name('company.edit');
-    Route::put('company/{company}/update',[PostsController::class, 'update'])->name('company.update');
-    Route::delete('company/{company}/destroy',[PostsController::class, 'destroy'])->name('company.destroy');
+    // Route::get('company', [PostsController::class, 'index'])->name('company.index');
+    // Route::get('company/create', [PostsController::class, 'create'])->name('company.create');
+    // Route::get('getCompanyData', [PostsController::class, 'getCompanyData'])->name('company.getCompanyData');
+    // Route::post('company/store', [PostsController::class, 'store'])->name('company.store');
+    // // Route::get('company/{company}/show',[PostsController::class, 'show'])->name('company.show');
+    // Route::get('company/{company}/edit', [PostsController::class, 'edit'])->name('company.edit');
+    // Route::put('company/{company}/update',[PostsController::class, 'update'])->name('company.update');
+    // Route::delete('company/{company}/destroy',[PostsController::class, 'destroy'])->name('company.destroy');
 
 //post routes
     Route::resource('post',PostsController::class);
 
+
     Route::get('getPostData', [PostsController::class, 'getPostData'])->name('post.getPostData');
-
-
-
-
-
-    // //employee routes
-    // Route::get('employee', [EmployeeController::class, 'index'])->name('employee.index');
-    // Route::get('employee/create', [EmployeeController::class, 'create'])->name('employee.create');
-    // Route::get('getEmployeeData', [EmployeeController::class, 'getEmployeeData'])->name('employee.getEmployeeData');
-    // Route::post('employee/store', [EmployeeController::class, 'store'])->name('employee.store');
-    // Route::get('employee/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
-    // Route::put('employee/{employee}/update',[EmployeeController::class, 'update'])->name('employee.update');
-    // Route::delete('employee/{employee}/destroy',[EmployeeController::class, 'destroy'])->name('employee.destroy');
 
 
 

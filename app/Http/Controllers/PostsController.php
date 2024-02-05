@@ -75,25 +75,52 @@ class PostsController extends Controller
     public function store(PostRequest $request)
     {
 
-        $baseSlug = Str::slug($request->name);
-        $uniqueSlug = $baseSlug;
+        if($request->edit_id == null){
 
-        $post = new Post();
-        $post->name = $request->name;
-        $post->author = $request->author;
-        $post->date = $request->date;
-        $post->content = $request->content;
+            $post = new Post();
+            $post->name = $request->name;
+            $post->author = $request->author;
+            $post->date = $request->date;
+            $post->content = $request->content;
 
-        // Image store code
-        if ($image = $request->file('image')) {
-            $destinationPath = 'post-image/';
-            $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $profileImage);
-            $post->image = $profileImage;
+            // Image store code
+            if ($image = $request->file('image')) {
+                $destinationPath = 'post-image/';
+                $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $profileImage);
+                $post->image = $profileImage;
+            }
+
+            $post->save();
+            return response()->json(["status_code" => 200, "message" => "Post created successfully"]);
+        }
+        if($request->edit_id != null){
+
+            $post = Post::find($request->edit_id);
+            $post->name = $request->name;
+            $post->author = $request->author;
+            $post->date = $request->date;
+            $post->content = $request->content;
+
+            // Image update code
+            if ($image = $request->file('image')) {
+                // Unlink the old image
+                $oldImage = $post->image;
+                $image_path = public_path('post-image/' . $oldImage);
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+                // Add the new image
+                $destinationPath = 'post-image/';
+                $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $profileImage);
+                $post->image = $profileImage;
+            }
+
+            $post->save();
+            return response()->json(["status_code" => 200, "message" => "Post updated successfully"]);
         }
 
-        $post->save();
-        return response()->json(["status_code" => 200, "message" => "Post created successfully"]);
 
     }
 
@@ -106,39 +133,14 @@ class PostsController extends Controller
         return view('admin.post.edit',compact('data'));
     }
 
+
     /**
      * Update the specified resource in storage.
      */
     public function update(PostRequest $request)
-    {   dd(1);
-
-        $baseSlug = Str::slug($request->name);
-        $uniqueSlug = $baseSlug;
+    {
 
 
-        $post = Post::find($request->edit_id);
-        $post->name = $request->name;
-        $post->author = $request->author;
-        $post->date = $request->date;
-        $post->content = $request->content;
-
-        // Image update code
-        if ($image = $request->file('image')) {
-            // Unlink the old image
-            $oldImage = $post->image;
-            $image_path = public_path('post-image/' . $oldImage);
-            if (file_exists($image_path)) {
-                unlink($image_path);
-            }
-            // Add the new image
-            $destinationPath = 'post-image/';
-            $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $profileImage);
-            $post->image = $profileImage;
-        }
-
-        $post->save();
-        return redirect()->route('admin.post.index')->with('info', 'Post updated successfully');
 
     }
 
