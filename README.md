@@ -70,34 +70,7 @@ Response:
 
 
 
-```php
-Get usr information api
 
-End point :  http://127.0.0.1:8000/api/login
-Request : 
-Add bearer token 
-Response:
-[
-    {
-        "id": 2,
-        "first_name": "raju",
-        "last_name": "vk",
-        "email": "nikhil@yopmail.com",
-        "company_id": 6,
-        "phone": "8965636526",
-        "created_at": "2024-02-01T19:03:38.000000Z",
-        "updated_at": "2024-02-01T19:14:47.000000Z",
-        "company": {
-            "id": 6,
-            "name": "nikcompany",
-            "email": "nikcom@yopmail.com",
-            "logo": "efefef.jpg",
-            "website": "test",
-            "created_at": "2024-02-01T15:24:45.000000Z",
-            "updated_at": "2024-02-01T17:32:14.000000Z"
-        }
-    },
-    {
         "id": 3,
         "first_name": "manu",
         "last_name": "varma",
