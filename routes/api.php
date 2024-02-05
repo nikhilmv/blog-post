@@ -22,7 +22,7 @@ Route::controller(UserController::class)->group(function() {
 });
 
 Route::middleware('auth:sanctum')->group( function () {
-    Route::get('/getUserInformation', [UserController::class, 'getUserInformation']);
+    Route::get('/getPostInformation', [UserController::class, 'getPostInformation']);
 });
 
 

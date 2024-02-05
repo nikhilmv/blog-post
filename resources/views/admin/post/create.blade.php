@@ -109,13 +109,9 @@
 
             $(".errorClass").text("");
             $.ajax({
-                data: new FormData(this),
+                data: $('#formdata-p').serialize(),
                 url: "{{ route('admin.post.store') }}",
-                method: 'POST',
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
-                processData: false,
+                type:'POST',
                 enctype: 'multipart/form-data',
                 success: function(data) {
                     if( data['status_code'] == 200) {

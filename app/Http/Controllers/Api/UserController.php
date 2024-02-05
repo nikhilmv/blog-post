@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-use App\Models\Employee;
-use App\Models\Company;
+use App\Models\Post;
 
 class UserController extends Controller
 {
@@ -64,8 +63,8 @@ class UserController extends Controller
 
 
 
-    public function getUserInformation(Request $request){
-        $data = Employee::with('company')->get()->toArray();
+    public function getPostInformation(Request $request){
+        $data = Post::get()->toArray();
         if($data != null){
             return response()->json($data, 200);
         }

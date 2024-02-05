@@ -95,7 +95,7 @@
 
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary float-right">Update</button>
+                            <button type="submit" id="submit-p" class="btn btn-primary float-right">Update</button>
                         </div>
                     </form>
                 </div>
@@ -138,21 +138,18 @@
 
 
     $(document).ready(function() {
-        var pram = '{{$data}}';
+        var pram = '{{$data->id}}';
 
         $('body').on('click','#submit-p',function(e){
 
             $(".errorClass").text("");
             $.ajax({
-                data: new FormData(this),
+                data: $('#formdata-p').serialize(),
 
                 url: "/post/update/" + pram,
+
                 method: 'POST',
-                dataType: 'JSON',
-                contentType: false,
-                cache: false,
                 processData: false,
-                enctype: 'multipart/form-data',
                 success: function(data) {
                     if( data['status_code'] == 200) {
                         window.location.href = '/admin/post';
