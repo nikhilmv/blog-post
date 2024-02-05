@@ -31,34 +31,34 @@ class PostsController extends Controller
 
     }
 
-    public function getCompanyData()
+    public function getPostData()
     {
 
-        $data = Company::orderBy('id','DESC');
+        $data = Post::orderBy('id','DESC');
         return Datatables::of($data)
                 ->addIndexColumn()
 
-                ->editColumn('company_name',function($row){
+                ->editColumn('name',function($row){
                     return $row->name;
-                })        ->editColumn('email',function($row){
-                    return $row->email;
-                })        ->editColumn('website',function($row){
-                    return $row->website;
+                })        ->editColumn('date',function($row){
+                    return $row->date;
+                })        ->editColumn('author',function($row){
+                    return $row->author;
                 })
                 ->addColumn('action', function ($row) {
                     $buttons = "";
 
-                        $buttons .='<button type="button" class="btn btn-icon btn-info btn-sm" title="Edit" onclick="window.location.href=\''. route('admin.company.edit', $row->id) .'\'">edit </button> ';
+                        $buttons .='<button type="button" class="btn btn-icon btn-info btn-sm" title="Edit" onclick="window.location.href=\''. route('admin.post.edit', $row->id) .'\'">edit </button> ';
 
-                        $buttons .='<button type="button" class="btn btn-icon btn-danger btn-sm" title="Delete" data-toggle="modal" data-target="#danger-alert-modal" onclick="deleteForm(\'delete-form'.$row->id.'\')">delete </button><form id="delete-form'.$row->id.'" method="post" action="'.route("admin.company.destroy", $row->id).'"><input type="hidden" name="_method" value="delete"><input type="hidden" name="_token"  value="'.csrf_token().'"></form>';
+                        $buttons .='<button type="button" class="btn btn-icon btn-danger btn-sm" title="Delete" data-toggle="modal" data-target="#danger-alert-modal" onclick="deleteForm(\'delete-form'.$row->id.'\')">delete </button><form id="delete-form'.$row->id.'" method="post" action="'.route("admin.post.destroy", $row->id).'"><input type="hidden" name="_method" value="delete"><input type="hidden" name="_token"  value="'.csrf_token().'"></form>';
 
 
                     return $buttons;
                 })
-                ->rawColumns(['action','logo'])
+                ->rawColumns(['action'])
                 ->make(true);
 
-    return view('admin/company/index');
+    return view('admin/post/index');
     }
 
     /**
@@ -66,39 +66,35 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('admin/company/create');
+        return view('admin/post/create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CompanyRequest $request)
+    public function store(PostRequest $request)
     {
 
-        $request->validate([
-            'name'=>'required|max:255',
-            'email'=>'required',
-            'website' =>  'required',
-            'logo' =>  'required',
-        ]);
         $baseSlug = Str::slug($request->name);
         $uniqueSlug = $baseSlug;
 
-        $company = new Company();
-        $company->name = $request->name;
-        $company->email = $request->email;
-        $company->website = $request->website;
+        $post = new Post();
+        $post->name = $request->name;
+        $post->author = $request->author;
+        $post->date = $request->date;
+        $post->content = $request->content;
 
         // Image store code
-        if ($image = $request->file('logo')) {
-            $destinationPath = 'company-image/';
+        if ($image = $request->file('image')) {
+            $destinationPath = 'post-image/';
             $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
-            $company->logo = $profileImage;
+            $post->image = $profileImage;
         }
 
-        $company->save();
-        return redirect()->route('admin.company.index')->with('success','company created successfully');
+        $post->save();
+        return response()->json(["status_code" => 200, "message" => "Post created successfully"]);
+
     }
 
     /**
@@ -106,48 +102,43 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $data = Company::where('id',$id)->first();
-        return view('admin.company.edit',compact('data'));
+        $data = Post::where('id',$id)->first();
+        return view('admin.post.edit',compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CompanyRequest $request)
+    public function update(PostRequest $request)
     {
-
-        $request->validate([
-            'name' => 'required|max:255',
-            'email'=>'required',
-            'website' =>  'required',
-        ]);
 
         $baseSlug = Str::slug($request->name);
         $uniqueSlug = $baseSlug;
 
 
-        $company = Company::find($request->edit_id);
-        $company->name = $request->name;
-        $company->email = $request->email;
-        $company->website = $request->website;
+        $post = Post::find($request->edit_id);
+        $post->name = $request->name;
+        $post->author = $request->author;
+        $post->date = $request->date;
+        $post->content = $request->content;
 
         // Image update code
-        if ($image = $request->file('logo')) {
+        if ($image = $request->file('image')) {
             // Unlink the old image
-            $oldImage = $company->logo;
-            $image_path = public_path('company-image/' . $oldImage);
+            $oldImage = $post->image;
+            $image_path = public_path('post-image/' . $oldImage);
             if (file_exists($image_path)) {
                 unlink($image_path);
             }
             // Add the new image
-            $destinationPath = 'company-image/';
+            $destinationPath = 'post-image/';
             $profileImage = $uniqueSlug . '.' . $image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
-            $company->image = $profileImage;
+            $post->image = $profileImage;
         }
 
-        $company->save();
-        return redirect()->route('admin.company.index')->with('info', 'Company updated successfully');
+        $post->save();
+        return redirect()->route('admin.post.index')->with('info', 'Post updated successfully');
 
     }
 
@@ -155,20 +146,20 @@ class PostsController extends Controller
      * Remove the specified resource from storage.
      */
 
-    public function destroy(Company $company)
+    public function destroy(Post $post)
     {
-        $company = company::where('id',$company->id)->first();
+        $post = Post::where('id',$post->id)->first();
 
         // Unlink the old image
-        $oldImage = $company->logo;
+        $oldImage = $post->logo;
         if($oldImage != null){
-            $image_path = public_path('company-image/' . $oldImage);
+            $image_path = public_path('post-image/' . $oldImage);
             if (file_exists($image_path)) {
                 unlink($image_path);
             }
         }
 
-        $company->delete();
-        return redirect()->route('admin.company.index')->with('error','Company deleted successfully.');
+        $post->delete();
+        return redirect()->route('admin.post.index')->with('error','Post deleted successfully.');
     }
 }

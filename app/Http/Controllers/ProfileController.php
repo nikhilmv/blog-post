@@ -15,8 +15,8 @@ class ProfileController extends Controller
 
     public function dashboard()
     {
-        // return view('dashboard');
-        return Redirect::route('admin.employee.index');
+        return view('dashboard');
+        //return Redirect::route('admin.employee.index');
     }
     /**
      * Display the user's profile form.
@@ -66,5 +66,5 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
-    
+
 }

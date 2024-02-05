@@ -1,23 +1,23 @@
 <x-admin>
     @section('title')
-        {{ 'Company' }}
+        {{ 'Post' }}
     @endsection
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Company Table</h3>
+            <h3 class="card-title">Post Table</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.company.create') }}" class="btn btn-sm btn-info">New</a>
+                <a href="{{ route('admin.post.create') }}" class="btn btn-sm btn-info">New</a>
             </div>
         </div>
         <div class="card-body p-3 m-3">
-       
+
         <table class="table table-bordered data-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>email</th> 
-                        <th>website</th>
+                        <th>Author</th>
+                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -25,7 +25,7 @@
                 </tbody>
             </table>
         </div>
-  
+
     </div>
     @section('css')
         <style>
@@ -33,10 +33,10 @@
                 height: 25px;
                 width: auto;
             }
-            .dataTables_filter{
+            /* .dataTables_filter{
                 display:none;
             float:right!important;
-                }
+                } */
             .dataTables_paginate.paging_simple_numbers{
             float:right!important;
 
@@ -45,31 +45,34 @@
     @endsection
 </x-admin>
 
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
 
 
     <script >
- 
+
+
 $(document).ready(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.company.getCompanyData') }}",
-        columns: [ 
+        ajax: "{{ route('admin.post.getPostData') }}",
+
+        columns: [
             {data: 'id', name: 'id', sortable: false},
-            {data: 'company_name', name: 'company_name', sortable: false},
-            {data: 'email', name: 'email', sortable: false},
-            {data: 'website', name: 'website', sortable: false},
+            {data: 'name', name: 'name', sortable: false},
+            {data: 'author', name: 'author', sortable: false},
+            {data: 'date', name: 'date', sortable: false},
             {data: 'action', name: 'action', sortable: false},
         ]
     });
- 
+
 
 
 });
- 
+
 function deleteForm($element=null)
     {
-       
+
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",

@@ -27,7 +27,6 @@ class PostRequest extends FormRequest
     public function rules()
     {
 
-
         $request = [];
         if($this->method() == 'POST'){
             $request['name'] = 'required|max:255';
