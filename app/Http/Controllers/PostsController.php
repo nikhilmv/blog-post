@@ -110,7 +110,7 @@ class PostsController extends Controller
      * Update the specified resource in storage.
      */
     public function update(PostRequest $request)
-    {
+    {   dd(1);
 
         $baseSlug = Str::slug($request->name);
         $uniqueSlug = $baseSlug;
